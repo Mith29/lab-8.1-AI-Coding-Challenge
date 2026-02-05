@@ -1,0 +1,141 @@
+:root{
+  --bg:#ffffff;
+  --surface:#f7f9fc;
+  --muted:#e6eef8;
+  --primary:#0b74de;
+  --accent:#0b74de;
+  --text:#0f1720;
+  --muted-text:#6b7280;
+  --radius:8px;
+  --gap:1rem;
+  --sidebar-width:240px;
+  --max-content-width:960px;
+  --focus: rgba(11,116,222,0.22);
+  --focus-strong: rgba(11,116,222,0.36);
+  --card-bg: #ffffff;
+  --elev: 0 6px 18px rgba(2,6,23,0.08);
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#071024;
+    --surface:#0b1220;
+    --muted:#0b1b2b;
+    --primary:#4ea6ff;
+    --accent:#4ea6ff;
+    --text:#e6eef8;
+    --muted-text:#9aa6b2;
+    --card-bg:#071430;
+    --focus: rgba(78,166,255,0.22);
+    --focus-strong: rgba(78,166,255,0.4);
+    --elev: 0 8px 24px rgba(2,6,23,0.6);
+  }
+}
+
+/* Reset + base */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;min-height:100vh;color:var(--text);background:var(--bg);display:flex;flex-direction:column}
+
+/* Header */
+.app-header{background:var(--primary);color:#fff;padding:1rem var(--gap);box-shadow:0 1px 3px rgba(2,6,23,.08)}
+.app-header h1{font-size:1.125rem}
+
+/* Header inner layout and navigation */
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--gap);max-width:var(--max-content-width);margin:0 auto;padding:0 var(--gap);width:100%}
+.main-nav .nav-list{display:flex;gap:.6rem;list-style:none;align-items:center;margin:0;padding:0}
+.main-nav .nav-link{color:rgba(255,255,255,.95);text-decoration:none;padding:.35rem .6rem;border-radius:6px;font-size:.95rem}
+.main-nav .nav-link:hover{background:rgba(255,255,255,.08)}
+
+/* Focus styles for accessibility */
+button:focus-visible, a:focus-visible, .deck:focus-visible{
+  outline:3px solid var(--focus);
+  outline-offset:2px;
+  border-radius:6px;
+}
+
+/* Stronger focus for keyboard users on primary actions */
+.add-deck:focus-visible, .main-nav .nav-link:focus-visible{
+  outline:3px solid var(--focus-strong);
+  outline-offset:3px;
+}
+
+/* Make decks and nav items keyboard focusable */
+.deck{touch-action:manipulation}
+.deck[tabindex="0"]{cursor:pointer}
+
+
+/* Layout - responsive grid */
+.app-layout{flex:1;display:grid;grid-template-columns:var(--sidebar-width) 1fr;gap:var(--gap);padding:var(--gap);max-width:var(--max-content-width);margin:0 auto;width:100%}
+
+.sidebar{background:var(--surface);border-radius:var(--radius);padding:calc(var(--gap) * 0.75);border:1px solid var(--muted)}
+.sidebar h2{margin-bottom:.5rem;font-size:.95rem;color:var(--text)}
+.deck-list{list-style:none;margin-bottom:.75rem}
+.deck{padding:.5rem .6rem;border-radius:6px;cursor:pointer;color:var(--primary)}
+.deck:hover{background:#eaf5ff}
+.deck.active{background:#e6f1ff}
+.add-deck{display:inline-block;padding:.45rem .6rem;border-radius:6px;border:none;background:var(--primary);color:#fff;cursor:pointer}
+
+.main-content{display:flex;align-items:center;justify-content:center}
+.card-area{width:100%;max-width:640px;text-align:center}
+
+/* Card */
+.card{width:100%;height:260px;perspective:1000px;margin-bottom:1rem;position:relative}
+.card-face{position:absolute;inset:0;background:#fff;border-radius:var(--radius);border:1px solid var(--muted);display:flex;align-items:center;justify-content:center;padding:1rem;font-size:1.1rem;backface-visibility:hidden;transition:transform .45s ease}
+.card-front{transform:rotateY(0deg)}
+.card-back{transform:rotateY(180deg)}
+.card.flipped .card-front{transform:rotateY(-180deg)}
+.card.flipped .card-back{transform:rotateY(0deg)}
+
+.card-controls{display:flex;gap:.5rem;justify-content:center}
+.card-controls button{padding:.5rem .75rem;border-radius:6px;border:1px solid #d0d7e6;background:#fff;cursor:pointer}
+
+.app-footer{padding:.65rem var(--gap);background:#f4f6fb;text-align:center;border-top:1px solid var(--muted);margin-top:auto}
+
+/* Responsive adjustments */
+@media (max-width:920px){
+  :root{--sidebar-width:200px}
+  .app-layout{grid-template-columns:var(--sidebar-width) 1fr;padding:.75rem}
+}
+
+@media (max-width:720px){
+  .app-layout{grid-template-columns:1fr}
+  .sidebar{order:2}
+  .main-content{order:1;padding-bottom:1rem}
+  .header-inner{flex-direction:column;align-items:flex-start}
+  .main-nav .nav-list{display:flex;flex-wrap:wrap}
+}
+
+/* Header New Deck button */
+.header-add-deck{background:transparent;border:1px solid rgba(255,255,255,0.18);color:#fff;padding:.4rem .6rem;border-radius:6px;cursor:pointer}
+.header-add-deck:hover{background:rgba(255,255,255,0.04)}
+
+/* Deck header + toolbar */
+.deck-main{width:100%}
+.deck-header{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.75rem}
+.deck-header #deck-title{font-size:1.125rem;margin:0}
+.deck-toolbar{display:flex;gap:.5rem;align-items:center}
+.search-input{padding:.45rem .6rem;border-radius:6px;border:1px solid var(--muted);background:var(--card-bg);color:var(--text)}
+.shuffle,.new-card{padding:.45rem .6rem;border-radius:6px;border:1px solid var(--muted);background:var(--surface);cursor:pointer}
+.shuffle:hover,.new-card:hover{box-shadow:var(--elev)}
+
+.edit-deck,.delete-deck{padding:.35rem .6rem;border-radius:6px;border:1px solid var(--muted);background:transparent;color:var(--text);cursor:pointer}
+.edit-deck:hover{background:rgba(0,0,0,0.03)}
+.delete-deck{color:#c74040}
+.delete-deck:hover{background:rgba(199,64,64,0.06)}
+.app-footer .instructions{font-size:.9rem;color:var(--muted-text);margin-top:.35rem}
+
+/* Modal styles */
+.modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.45);z-index:60}
+.modal{background:var(--card-bg);color:var(--text);padding:1rem 1.1rem;border-radius:10px;min-width:280px;max-width:420px;box-shadow:var(--elev);border:1px solid var(--muted)}
+.modal h3{margin:0 0 .5rem 0;font-size:1.05rem}
+.modal label{display:block;margin-bottom:.35rem;color:var(--muted-text)}
+.modal input[type="text"]{width:100%;padding:.5rem .6rem;border-radius:6px;border:1px solid var(--muted);background:var(--card-bg);color:var(--text);margin-bottom:.75rem}
+.modal-actions{display:flex;justify-content:flex-end;gap:.5rem}
+.modal .btn{padding:.45rem .6rem;border-radius:6px;border:1px solid var(--muted);background:var(--surface);cursor:pointer}
+.modal .btn.create{background:var(--primary);color:#fff;border-color:transparent}
+
+/* hide modal when [hidden] attribute present */
+.modal-overlay[hidden]{display:none}
+

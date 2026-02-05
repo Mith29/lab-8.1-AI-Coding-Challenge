@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Flashcards App</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<header class="app-header">
+		<div class="header-inner">
+			<h1>Flashcards</h1>
+			<button class="add-deck header-add-deck">+ New Deck</button>
+			<nav class="main-nav" aria-label="Main navigation">
+				<ul class="nav-list">
+					<li><a href="#" class="nav-link">Home</a></li>
+					<li><a href="#" class="nav-link">Decks</a></li>
+					<li><a href="#" class="nav-link">Study</a></li>
+					<li><a href="#" class="nav-link">Settings</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<div class="app-layout">
+		<aside class="sidebar">
+			<h2>Decks</h2>
+			<ul class="deck-list">
+				<li class="deck" tabindex="0" role="button">Sample Deck 1</li>
+				<li class="deck" tabindex="0" role="button">Sample Deck 2</li>
+				<li class="deck" tabindex="0" role="button">Sample Deck 3</li>
+			</ul>
+
+		</aside>
+
+		<main class="main-content">
+			<section class="deck-main">
+				<header class="deck-header">
+					<h2 id="deck-title">Sample Deck 1</h2>
+					<div class="deck-toolbar">
+						<input type="search" class="search-input" placeholder="Search cards..." aria-label="Search cards">
+						<button class="shuffle">Shuffle</button>
+						<button class="new-card">+ New Card</button>
+						<button class="edit-deck">Edit Deck</button>
+						<button class="delete-deck">Delete Deck</button>
+					</div>
+				</header>
+
+				<section class="card-area">
+					<div class="card" id="current-card">
+						<div class="card-face card-front">Front of card</div>
+						<div class="card-face card-back">Back of card</div>
+					</div>
+
+					<div class="card-controls">
+						<button class="prev">Prev</button>
+						<button class="flip">Flip</button>
+						<button class="next">Next</button>
+					</div>
+				</section>
+			</section>
+		</main>
+	</div>
+
+	<footer class="app-footer">
+		<p class="instructions">Tip: Use <strong>Flip</strong> to reveal answers. Use <strong>New Deck</strong> or <strong>+ New Card</strong> to add content.</p>
+	</footer>
+
+	<!-- New Deck modal -->
+	<div id="deck-modal" class="modal-overlay" hidden aria-hidden="true">
+		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="deck-modal-title">
+			<h3 id="deck-modal-title">Create new deck</h3>
+			<form id="deck-form">
+				<label for="deck-name">Deck name</label>
+				<input id="deck-name" name="name" type="text" maxlength="60" required placeholder="My new deck">
+				<div class="modal-actions">
+					<button type="button" class="btn cancel">Cancel</button>
+					<button type="submit" class="btn create">Create</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="app.js"></script>
+</body>
+</html>
+
