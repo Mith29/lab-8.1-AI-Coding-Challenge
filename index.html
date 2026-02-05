@@ -11,14 +11,7 @@
 		<div class="header-inner">
 			<h1>Flashcards</h1>
 			<button class="add-deck header-add-deck">+ New Deck</button>
-			<nav class="main-nav" aria-label="Main navigation">
-				<ul class="nav-list">
-					<li><a href="#" class="nav-link">Home</a></li>
-					<li><a href="#" class="nav-link">Decks</a></li>
-					<li><a href="#" class="nav-link">Study</a></li>
-					<li><a href="#" class="nav-link">Settings</a></li>
-				</ul>
-			</nav>
+			<!-- navigation removed to simplify header -->
 		</div>
 	</header>
 
@@ -39,24 +32,33 @@
 					<h2 id="deck-title">Sample Deck 1</h2>
 					<div class="deck-toolbar">
 						<input type="search" class="search-input" placeholder="Search cards..." aria-label="Search cards">
-						<button class="shuffle">Shuffle</button>
-						<button class="new-card">+ New Card</button>
-						<button class="edit-deck">Edit Deck</button>
-						<button class="delete-deck">Delete Deck</button>
+						<button type="button" class="randomize" aria-pressed="false">Randomize</button>
+						<button type="button" class="shuffle">Shuffle</button>
+						<button type="button" class="new-card">+ New Card</button>
+						<button type="button" class="edit-deck">Edit Deck</button>
+						<button type="button" class="delete-deck">Delete Deck</button>
 					</div>
 				</header>
 
 				<section class="card-area">
 					<div class="card" id="current-card">
-						<div class="card-face card-front">Front of card</div>
-						<div class="card-face card-back">Back of card</div>
-					</div>
+						<div class="card-inner">
+							<div class="card-face card-front">Front of card</div>
+							<div class="card-face card-back">Back of card</div>
+						</div>
+						</div>
 
 					<div class="card-controls">
 						<button class="prev">Prev</button>
 						<button class="flip">Flip</button>
 						<button class="next">Next</button>
 					</div>
+				</section>
+
+				<!-- Card list / preview -->
+				<section class="card-list-area">
+					<h3 class="visually-hidden">Cards in deck</h3>
+					<ul class="card-list" id="card-list"></ul>
 				</section>
 			</section>
 		</main>
@@ -80,6 +82,26 @@
 			</form>
 		</div>
 	</div>
+
+	<!-- Card modal -->
+	<div id="card-modal" class="modal-overlay" hidden aria-hidden="true">
+		<div class="modal" role="dialog" aria-modal="true" aria-labelledby="card-modal-title">
+			<h3 id="card-modal-title">Create card</h3>
+			<form id="card-form">
+				<label for="card-front">Front</label>
+				<input id="card-front" name="front" type="text" maxlength="250" required placeholder="Question or prompt">
+				<label for="card-back">Back</label>
+				<textarea id="card-back" name="back" rows="3" placeholder="Answer or details"></textarea>
+				<div class="modal-actions">
+					<button type="button" class="btn cancel">Cancel</button>
+					<button type="submit" class="btn create">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- ARIA live region for announcements -->
+	<div id="a11y-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
 	<script src="app.js"></script>
 </body>
