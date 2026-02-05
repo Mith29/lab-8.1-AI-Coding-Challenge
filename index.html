@@ -31,7 +31,8 @@
 				<header class="deck-header">
 					<h2 id="deck-title">Sample Deck 1</h2>
 					<div class="deck-toolbar">
-						<input type="search" class="search-input" placeholder="Search cards..." aria-label="Search cards">
+						<label for="search" class="visually-hidden">Search cards</label>
+						<input id="search" type="search" class="search-input" placeholder="Search cards..." aria-label="Search cards">
 						<button type="button" class="randomize" aria-pressed="false">Randomize</button>
 						<button type="button" class="shuffle">Shuffle</button>
 						<button type="button" class="new-card">+ New Card</button>
@@ -74,7 +75,8 @@
 			<h3 id="deck-modal-title">Create new deck</h3>
 			<form id="deck-form">
 				<label for="deck-name">Deck name</label>
-				<input id="deck-name" name="name" type="text" maxlength="60" required placeholder="My new deck">
+				<input id="deck-name" name="name" type="text" maxlength="60" required placeholder="My new deck" aria-describedby="deck-error">
+				<div id="deck-error" class="error" role="alert" aria-live="assertive" aria-atomic="true"></div>
 				<div class="modal-actions">
 					<button type="button" class="btn cancel">Cancel</button>
 					<button type="submit" class="btn create">Create</button>
@@ -89,7 +91,8 @@
 			<h3 id="card-modal-title">Create card</h3>
 			<form id="card-form">
 				<label for="card-front">Front</label>
-				<input id="card-front" name="front" type="text" maxlength="250" required placeholder="Question or prompt">
+				<input id="card-front" name="front" type="text" maxlength="250" required placeholder="Question or prompt" aria-describedby="card-error">
+				<div id="card-error" class="error" role="alert" aria-live="assertive" aria-atomic="true"></div>
 				<label for="card-back">Back</label>
 				<textarea id="card-back" name="back" rows="3" placeholder="Answer or details"></textarea>
 				<div class="modal-actions">

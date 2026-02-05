@@ -152,6 +152,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
   function renderDeckList(){
     if(!deckList) return;
     deckList.innerHTML = '';
+    if(!decks.length){
+      const li = document.createElement('li');
+      li.className = 'empty';
+      li.textContent = 'No decks yet — click + New Deck to create one.';
+      deckList.appendChild(li);
+      return;
+    }
     decks.forEach(d => {
       const li = document.createElement('li');
       li.className = 'deck';
@@ -200,6 +207,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const deckModal = document.getElementById('deck-modal');
   const deckForm = document.getElementById('deck-form');
   const deckNameInput = document.getElementById('deck-name');
+  const deckErrorEl = document.getElementById('deck-error');
   const headerAdd = document.querySelector('.header-add-deck');
 
   // Accessible modal: focus trap, ESC to close, restore focus to opener
@@ -249,6 +257,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     deckModal.hidden = true;
     deckModal.setAttribute('aria-hidden','true');
     deckForm?.reset();
+    if(deckErrorEl) { deckErrorEl.textContent = ''; deckNameInput?.removeAttribute('aria-invalid'); }
     releaseFocus();
     // restore focus to opener
     try{ if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus(); }catch(e){}
@@ -259,6 +268,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // open create modal from header button
   headerAdd?.addEventListener('click', (e)=> openDeckModal('', e.currentTarget));
 
+  // clear inline deck error when user types
+  deckNameInput?.addEventListener('input', ()=>{
+    if(deckErrorEl) deckErrorEl.textContent = '';
+    deckNameInput?.removeAttribute('aria-invalid');
+  });
+
   // overlay click closes modal when clicking outside dialog
   deckModal?.addEventListener('click', (e)=>{ if(e.target === deckModal) closeDeckModal(); });
   deckModal?.querySelector('.cancel')?.addEventListener('click', closeDeckModal);
@@ -266,7 +281,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
   deckForm?.addEventListener('submit', (e)=>{
     e.preventDefault();
     const name = (deckNameInput?.value || '').trim();
-    if(!name){ deckNameInput?.focus(); return; }
+    if(!name){
+      if(deckErrorEl) deckErrorEl.textContent = 'Deck name cannot be empty.';
+      deckNameInput?.setAttribute('aria-invalid','true');
+      deckNameInput?.focus();
+      return;
+    }
     if(editDeckId){
       const deck = decks.find(d=>d.id === editDeckId);
       if(deck) deck.name = name;
@@ -276,6 +296,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       const el = document.querySelector(`.deck[data-id="${editDeckId}"]`);
       el?.focus();
       if(liveEl) liveEl.textContent = `Deck \u201C${name}\u201D updated.`;
+      if(deckErrorEl) deckErrorEl.textContent = '';
       saveState();
     } else {
       const id = `deck-${deckCounter++}`;
@@ -286,6 +307,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
       const el = document.querySelector(`.deck[data-id="${id}"]`);
       el?.focus();
       if(liveEl) liveEl.textContent = `Deck \u201C${name}\u201D created.`;
+      if(deckErrorEl) deckErrorEl.textContent = '';
       saveState();
     }
     closeDeckModal();
@@ -296,6 +318,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   const cardModal = document.getElementById('card-modal');
   const cardForm = document.getElementById('card-form');
   const cardFront = document.getElementById('card-front');
+  const cardErrorEl = document.getElementById('card-error');
   const cardBack = document.getElementById('card-back');
   let editCardIndex = null;
 
@@ -304,6 +327,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
     cardListEl.innerHTML = '';
     const deck = decks.find(d=>d.id === activeDeckId);
     if(!deck || !deck.cards) return;
+    if(!deck.cards.length){
+      const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'No cards yet — add your first card.'; cardListEl.appendChild(li);
+      if(frontEl) frontEl.textContent = 'No cards'; if(backEl) backEl.textContent = '';
+      return;
+    }
     deck.cards.forEach((c,i)=>{
       const li = document.createElement('li');
       const txt = document.createElement('div'); txt.className = 'card-text'; txt.textContent = c.front;
@@ -355,6 +383,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
       cardBack.value = '';
       cardModal.querySelector('#card-modal-title').textContent = 'Create card';
     }
+    if(cardErrorEl) cardErrorEl.textContent = '';
+    cardFront?.removeAttribute('aria-invalid');
     cardModal.hidden = false; cardModal.removeAttribute('aria-hidden');
     trapFocus(cardModal);
   }
@@ -362,12 +392,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
   function closeCardModal(){
     if(!cardModal) return;
     cardModal.hidden = true; cardModal.setAttribute('aria-hidden','true');
-    cardForm?.reset(); releaseFocus();
+    cardForm?.reset();
+    if(cardErrorEl){ cardErrorEl.textContent = ''; cardFront?.removeAttribute('aria-invalid'); }
+    releaseFocus();
     try{ if(lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus(); }catch(e){}
     lastFocused = null; editCardIndex = null;
   }
 
   document.querySelector('.new-card')?.addEventListener('click', (e)=>{ openCardModal(null, e.currentTarget); });
+
+  // clear inline card error when user types on front input
+  cardFront?.addEventListener('input', ()=>{
+    if(cardErrorEl) cardErrorEl.textContent = '';
+    cardFront?.removeAttribute('aria-invalid');
+  });
 
   cardModal?.addEventListener('click', (e)=>{ if(e.target === cardModal) closeCardModal(); });
   cardModal?.querySelector('.cancel')?.addEventListener('click', closeCardModal);
@@ -376,7 +414,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     e.preventDefault();
     const front = (cardFront?.value || '').trim();
     const back = (cardBack?.value || '').trim();
-    if(!front) { cardFront.focus(); return; }
+    if(!front) { if(cardErrorEl) cardErrorEl.textContent = 'Card front cannot be empty.'; cardFront?.setAttribute('aria-invalid','true'); cardFront.focus(); return; }
     const deck = decks.find(d=>d.id === activeDeckId);
     if(!deck){ alert('Please select a deck first.'); closeCardModal(); return; }
     if(editCardIndex !== null){
@@ -436,11 +474,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelector('.search-input')?.addEventListener('input', (e)=>{
     const q = (e.target.value || '').toLowerCase().trim();
     const deck = decks.find(d=>d.id === activeDeckId);
-    if(!q){ renderCard(0); return; }
+    if(!q){ renderCard(0); renderCardList(); return; }
     if(!deck || !deck.cards) return;
     // search the original deck cards (case-insensitive)
     const foundInDeck = deck.cards.findIndex(c => (c.front + ' ' + c.back).toLowerCase().includes(q));
-    if(foundInDeck === -1) return;
+    if(foundInDeck === -1){
+      // show no results
+      if(cardListEl) { cardListEl.innerHTML = ''; const li = document.createElement('li'); li.className = 'empty'; li.textContent = 'No cards found.'; cardListEl.appendChild(li); }
+      if(frontEl) frontEl.textContent = 'No cards found'; if(backEl) backEl.textContent = '';
+      return;
+    }
     // map that card to currentCards order (which may be shuffled)
     const target = deck.cards[foundInDeck];
     const foundInCurrent = currentCards.findIndex(c => c.front === target.front && c.back === target.back);
